@@ -1,0 +1,9 @@
+venv
+.git
+.env
+db.sqlite3
+db.sqlite3.bak
+__pycache__
+*.pyc
+media
+collected_static
