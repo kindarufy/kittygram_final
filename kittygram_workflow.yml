@@ -99,7 +99,7 @@ jobs:
         with:
           context: ./backend/
           push: true
-          tags: kindarufy/kittygram_backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_backend:latest
 
   build_frontend_and_push_to_docker_hub:
     name: Push frontend Docker image to Docker Hub
@@ -124,7 +124,7 @@ jobs:
         with:
           context: ./frontend/
           push: true
-          tags: kindarufy/kittygram_frontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_frontend:latest
 
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to Docker Hub
@@ -151,7 +151,7 @@ jobs:
         with:
           context: ./nginx/
           push: true
-          tags: kindarufy/kittygram_gateway:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_gateway:latest
 
   deploy:
     name: Deploy to production server
@@ -186,8 +186,7 @@ jobs:
             sudo docker compose -f docker-compose.production.yml down
             sudo docker compose -f docker-compose.production.yml up -d
             sudo docker compose -f docker-compose.production.yml exec -T backend python manage.py migrate
-            sudo docker compose -f docker-compose.production.yml exec -T backend python manage.py collectstatic --noinput
-            sudo docker compose -f docker-compose.production.yml exec -T backend cp -r /app/collected_static/. /backend_static/static/
+            sudo docker compose -f docker-compose.production.yml exec -T backend python manage.py collectstatic --no-input
 
   send_message:
     name: Send Telegram notification
@@ -200,4 +199,9 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Деплой Kittygram успешно выполнен!
+          message: |
+            Деплой Kittygram успешно выполнен!
+
+            Автор push: ${{ github.actor }}
+            Сообщение коммита: ${{ github.event.commits[0].message }}
+            Ссылка на коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
