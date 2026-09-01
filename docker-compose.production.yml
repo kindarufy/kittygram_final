@@ -11,7 +11,7 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   backend:
-    image: kindarufy/kittygram_backend:latest
+    image: ${DOCKER_USERNAME}/kittygram_backend:latest
     env_file: .env
     volumes:
       - static:/backend_static
@@ -20,14 +20,14 @@ services:
       - db
 
   frontend:
-    image: kindarufy/kittygram_frontend:latest
+    image: ${DOCKER_USERNAME}/kittygram_frontend:latest
     env_file: .env
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
 
   gateway:
-    image: kindarufy/kittygram_gateway:latest
+    image: ${DOCKER_USERNAME}/kittygram_gateway:latest
     env_file: .env
     ports:
       - 9000:80
