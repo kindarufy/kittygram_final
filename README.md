@@ -1,22 +1,22 @@
 # Kittygram Final
 
-**Kittygram Final** — учебное Django + React приложение, подготовленное к контейнерному запуску, PostgreSQL, Nginx gateway и CI/CD.
+**Kittygram Final** — учебное Django + React приложение с PostgreSQL, Nginx, Docker Compose и GitHub Actions.
 
-Функционально Kittygram — социальная сеть для публикации карточек котиков. Портфолио-ценность этого репозитория прежде всего в инфраструктурной части: Docker Compose, volumes, production configuration и GitHub Actions deployment flow.
+Функционально Kittygram — социальная сеть для публикации карточек котиков. Репозиторий в первую очередь демонстрирует инфраструктурную часть full-stack приложения: контейнеризацию, production configuration, автоматические проверки и deployment flow.
 
 ## Что демонстрирует проект
 
 - контейнеризацию Django backend;
 - контейнеризацию React frontend;
 - отдельный Nginx gateway;
-- PostgreSQL в отдельном container;
+- PostgreSQL в отдельном контейнере;
 - volumes для database, static и media;
 - локальный и production compose-файлы;
 - конфигурацию через `.env`;
 - Gunicorn для backend;
-- CI/CD через GitHub Actions;
-- сборку и публикацию Docker images;
-- SSH deployment;
+- backend/frontend проверки в GitHub Actions;
+- проверку сборки Docker images без production-секретов;
+- отдельный ручной production deployment через SSH;
 - migrations и collectstatic в deployment flow;
 - Telegram notification после успешного deploy.
 
@@ -57,7 +57,9 @@ kittygram_final/
 ├── backend/
 ├── frontend/
 ├── nginx/
-├── .github/workflows/main.yml
+├── .github/workflows/
+│   ├── main.yml              # CI: tests + Docker build
+│   └── deploy.yml            # manual production deployment
 ├── docker-compose.yml
 ├── docker-compose.production.yml
 ├── .env.example
@@ -89,13 +91,17 @@ docker compose exec backend python manage.py collectstatic --noinput
 
 ## CI/CD
 
-Workflow `.github/workflows/main.yml` включает проверки backend/frontend, сборку Docker images и production deployment steps.
+`.github/workflows/main.yml` запускается на push и pull request в `main`. Он проверяет backend, frontend и сборку всех Docker images, не требуя production SSH/Docker Hub secrets.
 
-Deployment secrets не должны храниться в repository files — они настраиваются через GitHub Actions Secrets.
+`.github/workflows/deploy.yml` запускается вручную через `workflow_dispatch`. Он публикует Docker images и выполняет SSH deployment только когда production environment действительно настроен.
+
+Такой split отделяет качество кода от доступности внешнего сервера: недоступный production host не делает обычный CI красным.
+
+Deployment secrets хранятся в GitHub Actions Secrets и не должны попадать в repository files.
 
 ## Статус
 
-Проект завершён в рамках курса **«Python-разработчик» Яндекс Практикума** и используется как portfolio case по **Docker, Django deployment, PostgreSQL, Nginx и CI/CD**.
+Проект завершён в рамках курса **«Python-разработчик» Яндекс Практикума** и демонстрирует Docker, Django deployment, PostgreSQL, Nginx и CI/CD.
 
 ## Автор
 
