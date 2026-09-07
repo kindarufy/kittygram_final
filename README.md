@@ -50,6 +50,10 @@ Nginx gateway
 | `gateway` | Nginx routing/static/media |
 | `db` | PostgreSQL |
 
+## Интерфейс
+
+![Kittygram — интерфейс приложения](docs/assets/kittygram-app.png)
+
 ## Структура
 
 ```text
