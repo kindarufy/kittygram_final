@@ -76,10 +76,13 @@ kittygram_final/
 git clone https://github.com/nikamurkaa/kittygram_final.git
 cd kittygram_final
 cp .env.example .env
-docker compose up --build
+docker compose up -d --build
 ```
 
 Пример локальных переменных находится в `.env.example`. Для реального deployment необходимо заменить `SECRET_KEY`, database password, `ALLOWED_HOSTS` и `CSRF_TRUSTED_ORIGINS`.
+
+Интерфейс: http://localhost:9000/. Нужны Docker Engine/Desktop и Compose v2.
+В PowerShell скопируйте шаблон командой `Copy-Item .env.example .env`.
 
 После запуска примените migrations:
 
@@ -110,3 +113,7 @@ Deployment secrets хранятся в GitHub Actions Secrets и не должн
 ## Автор
 
 [Николь Журбенко](https://github.com/nikamurkaa)
+
+Регистрация доступна через веб-интерфейс. Администратора создайте командой
+`docker compose exec backend python manage.py createsuperuser`.
+Остановка: `docker compose down` (данные volumes сохраняются).

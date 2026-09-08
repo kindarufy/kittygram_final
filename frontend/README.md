@@ -1,23 +1,22 @@
-### Как запустить проект:
+# Kittygram frontend
 
-Клонировать репозиторий и перейти в него в командной строке:
+React-интерфейс карточек котов. Для работы API, загрузки фото и авторизации
+используйте Compose из [корневого README](../README.md).
 
-```
-git clone https://github.com/yandex-praktikum/kittygram_frontend.git
-```
-
-```
-cd kittygram_frontend
+```bash
+# Из корня репозитория после создания .env
+docker compose up -d --build
 ```
 
-Установить зависимости:
+Примените миграции и соберите backend static по основной инструкции.
+Откройте http://localhost:9000/.
 
-```
-npm i
+Для отдельной проверки сборки нужен Node.js 22:
+
+```bash
+cd frontend
+npm ci
+npm run build
 ```
 
-Запустить проект:
-
-```
-npm run start
-```
+Standalone dev-server не заменяет полный Compose: запросам API нужен backend/gateway.
