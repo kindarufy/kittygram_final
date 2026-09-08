@@ -23,6 +23,7 @@ export const EditCardPage = ({ data, setData, extraClass = "" }) => {
   const [currentFileName, setCurrentFileName] = React.useState("");
   const [errorName, setErrorName] = React.useState("");
   const [errorAge, setErrorAge] = React.useState("");
+  const [error, setError] = React.useState("");
 
   const history = useHistory();
 
@@ -57,19 +58,26 @@ export const EditCardPage = ({ data, setData, extraClass = "" }) => {
   };
 
   const handleResponse = (res) => {
-    if (typeof res.name === "object") {
+    setError(res?.image?.join(" ") || res?.detail || res?.message ||
+      "Не удалось сохранить кота. Проверьте данные и подключение.");
+    if (typeof res?.name === "object") {
       setErrorName("Поле с именем является обязательным");
-    } else if (typeof res.birth_year === "object") {
+    } else if (typeof res?.birth_year === "object") {
       setErrorAge("Поле с годом рождения является обязательным");
     }
   };
 
   const handleSubmit = () => {
+    setError("");
     errorAge && setErrorAge("");
     errorName && setErrorName("");
 
     const totalCard = {};
     const photo = document.querySelector('input[type="file"]').files[0];
+    if (photo && !["image/jpeg", "image/png"].includes(photo.type)) {
+      setError("Выберите изображение в формате JPEG или PNG.");
+      return;
+    }
     if (data.name !== card.name) {
       totalCard["name"] = card.name;
     }
@@ -91,14 +99,14 @@ export const EditCardPage = ({ data, setData, extraClass = "" }) => {
     if (photo) {
       getBase64(photo).then((data) => {
         totalCard["image"] = data;
-        updateCard(totalCard, card.id)
+        return updateCard(totalCard, card.id)
           .then((res) => {
             if (res && res.id) {
               history.replace({ pathname: `/cats/${res.id}` });
             }
           })
           .catch(handleResponse);
-      });
+      }).catch(handleResponse);
     } else {
       updateCard(totalCard, card.id)
         .then((res) => {
@@ -144,12 +152,13 @@ export const EditCardPage = ({ data, setData, extraClass = "" }) => {
             <p className="text text_type_medium-16 text_color_primary">
               {currentFileName
                 ? currentFileName
-                : "Загрузите фото в формате JPG"}
+                : "Загрузите фото в формате JPEG или PNG"}
             </p>
           </label>
         )}
         <input
           type="file"
+          accept="image/jpeg,image/png"
           className={styles.file_input}
           name="image"
           id="image"
@@ -179,6 +188,7 @@ export const EditCardPage = ({ data, setData, extraClass = "" }) => {
           setCard={setCard}
         />
         <Select card={card} setCard={setCard} userAchievements={achievements} />
+        {error && <p role="alert">{error}</p>}
         <ButtonForm
           extraClass={styles.submit_btn}
           text="Сохранить"

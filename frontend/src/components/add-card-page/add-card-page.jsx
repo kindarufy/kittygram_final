@@ -24,6 +24,7 @@ export const AddCardPage = ({ extraClass = "" }) => {
   });
   const [errorName, setErrorName] = React.useState("");
   const [errorAge, setErrorAge] = React.useState("");
+  const [error, setError] = React.useState("");
 
   const history = useHistory();
 
@@ -40,29 +41,35 @@ export const AddCardPage = ({ extraClass = "" }) => {
   };
 
   const handleResponse = (res) => {
-    if (typeof res.name === "object") {
+    setError(res?.image?.join(" ") || res?.detail || res?.message ||
+      "Не удалось сохранить кота. Проверьте данные и подключение.");
+    if (typeof res?.name === "object") {
       setErrorName("Поле с именем является обязательным");
-    } else if (typeof res.birth_year === "object") {
+    } else if (typeof res?.birth_year === "object") {
       setErrorAge("Поле с годом рождения является обязательным");
     }
   };
 
   const handleSubmit = () => {
+    setError("");
     errorAge && setErrorAge("");
     errorName && setErrorName("");
 
     const photo = document.querySelector('input[type="file"]').files[0];
+    if (photo && !["image/jpeg", "image/png"].includes(photo.type)) {
+      setError("Выберите изображение в формате JPEG или PNG.");
+      return;
+    }
     photo
       ? getBase64(photo).then((data) => {
-          card["image"] = data;
-          sendCard(card)
+          return sendCard({ ...card, image: data })
             .then((res) => {
               if (res && res.id) {
                 history.push(`/cats/${res.id}`);
               }
             })
             .catch(handleResponse);
-        })
+        }).catch(handleResponse)
       : sendCard(card)
           .then((res) => {
             if (res && res.id) {
@@ -92,11 +99,12 @@ export const AddCardPage = ({ extraClass = "" }) => {
           <p className="text text_type_medium-16 text_color_primary">
             {currentFileName
               ? currentFileName
-              : "Загрузите фото в формате JPG"}
+              : "Загрузите фото в формате JPEG или PNG"}
           </p>
         </label>
         <input
           type="file"
+          accept="image/jpeg,image/png"
           className={styles.file_input}
           name="image"
           id="image"
@@ -124,6 +132,7 @@ export const AddCardPage = ({ extraClass = "" }) => {
           setCard={setCard}
         />
         <Select card={card} setCard={setCard} />
+        {error && <p role="alert">{error}</p>}
         <ButtonForm
           extraClass={styles.submit_btn}
           text="Сохранить"
