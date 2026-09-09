@@ -59,7 +59,7 @@ Nginx gateway
 ## Структура
 
 ```text
-kittygram_final/
+kittygram/
 ├── backend/
 ├── frontend/
 ├── nginx/
