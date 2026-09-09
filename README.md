@@ -1,8 +1,8 @@
 **English** | [Русский](README.ru.md)
 
-# Kittygram Final
+# Kittygram
 
-**Kittygram Final** is an educational Django + React application with PostgreSQL, Nginx, Docker Compose, and GitHub Actions.
+**Kittygram** is an educational Django + React application with PostgreSQL, Nginx, Docker Compose, and GitHub Actions.
 
 Kittygram is a social network for sharing cat profiles. This repository primarily demonstrates the infrastructure of a full-stack application: containerization, production configuration, automated checks, and deployment workflows.
 
