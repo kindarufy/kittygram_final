@@ -96,6 +96,14 @@ docker compose exec backend python manage.py migrate
 docker compose exec backend python manage.py collectstatic --noinput
 ```
 
+Регистрация доступна через веб-интерфейс. Администратора создайте командой:
+
+```bash
+docker compose exec backend python manage.py createsuperuser
+```
+
+Остановка: `docker compose down` (данные в volumes сохраняются).
+
 ## CI/CD
 
 `.github/workflows/main.yml` запускается на push и pull request в `main`. Он проверяет backend, frontend и сборку всех Docker images, не требуя production SSH/Docker Hub secrets.
@@ -113,7 +121,3 @@ Deployment secrets хранятся в GitHub Actions Secrets и не должн
 ## Автор
 
 [Николь Журбенко](https://github.com/nikamurkaa)
-
-Регистрация доступна через веб-интерфейс. Администратора создайте командой
-`docker compose exec backend python manage.py createsuperuser`.
-Остановка: `docker compose down` (данные volumes сохраняются).
