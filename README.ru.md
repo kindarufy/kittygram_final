@@ -75,8 +75,8 @@ kittygram_final/
 ## Локальный запуск
 
 ```bash
-git clone https://github.com/nikamurkaa/kittygram_final.git
-cd kittygram_final
+git clone https://github.com/nikamurkaa/kittygram.git
+cd kittygram
 cp .env.example .env
 docker compose up -d --build
 ```
