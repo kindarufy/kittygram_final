@@ -59,7 +59,7 @@ Containers:
 ## Structure
 
 ```text
-kittygram_final/
+kittygram/
 ├── backend/
 ├── frontend/
 ├── nginx/
